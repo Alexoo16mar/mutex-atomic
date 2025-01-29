@@ -51,6 +51,19 @@ void say_goodbye() {
     }
 }
 
+std::mutex blocker;
+unsigned int garlic_count = 0;
+void shopper() {
+    for (int i = 1; i <= 10000; i++) {
+        {
+            std::lock_guard<std::mutex> lock(blocker);
+            garlic_count++;
+        }
+        std::cout << "shopper id: " << std::this_thread::get_id() << std::endl;
+        std::cout << "Shopper: " << i << std::endl;
+    }
+}
+
 int main() {
     /**/
     // Chopping vegetables
@@ -71,5 +84,15 @@ int main() {
 
     hello_thread.join();
     goodbye_thread.join();
+    */
+    
+    /*
+    std::thread barron(shopper);
+    std::thread olivia(shopper);
+
+    barron.join();
+    olivia.join();
+
+    std::cout << "We should buy " << garlic_count << " garlics.\n";
     */
 }
